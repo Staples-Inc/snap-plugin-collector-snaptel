@@ -1,0 +1,5 @@
+name: snaptel
+type: collector
+maintainer: core
+license: Apache-2.0
+description: "Collects snap task metrics."

@@ -1,0 +1,18 @@
+---
+  version: 1
+  name: "example_task"
+  schedule:
+    type: "simple"
+    interval: "1s"
+  max-failures: 10
+  workflow:
+    collect:
+      metrics:
+        /staples/snaptel/task/*/fail_count: {}
+        /staples/snaptel/task/*/hit_count: {}
+        /staples/snaptel/task/*/state: {}
+        /staples/snaptel/task/*/statecode: {}
+        /staples/snaptel/tasks/Disabled: {}
+        /staples/snaptel/tasks/Running: {}
+        /staples/snaptel/tasks/Stopped: {}
+      process: null
