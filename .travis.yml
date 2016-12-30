@@ -1,0 +1,19 @@
+sudo: required
+language: go
+go:
+- 1.6.3
+- 1.7.3
+env:
+  global:
+  - ORG_PATH=/home/travis/gopath/src/github.com/Staples-Inc
+  - SNAP_PLUGIN_SOURCE=/home/travis/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+  matrix:
+  - TEST_TYPE=small
+  - TEST_TYPE=build
+before_install:
+- "[[ -d $SNAP_PLUGIN_SOURCE ]] || mkdir -p $ORG_PATH && ln -s $TRAVIS_BUILD_DIR $SNAP_PLUGIN_SOURCE"
+install:
+- cd $SNAP_PLUGIN_SOURCE
+- make deps
+script:
+- make check 2>&1
