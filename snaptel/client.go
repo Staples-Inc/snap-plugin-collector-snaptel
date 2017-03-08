@@ -78,7 +78,7 @@ func (s snaptelClient) GetTaskMetrics() ([]TaskData, error) {
 	}
 	req.SetBasicAuth("snap", s.apiKey)
 	response, err := s.client.Do(req)
-	if err != nil && responce == nil {
+	if err != nil && response == nil {
 		return nil, err
 	}
 	defer response.Body.Close()
