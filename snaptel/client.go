@@ -21,6 +21,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
+)
+
+var (
+	httpClient *http.Client
+)
+
+const (
+	MaxIdleConnections int = 20
+	RequestTimeout     int = 5
 )
 
 type SnaptelClient interface {
@@ -42,9 +52,20 @@ func NewSnaptelClient(address string, https bool, insecure bool, key string) *sn
 	}
 	url := scheme + address
 
-	client := &http.Client{}
+	//client := &http.Client{}
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost: MaxIdleConnections,
+		},
+		Timeout: time.Duration(RequestTimeout) * time.Second,
+	}
+
 	if insecure {
-		client.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
+		client.Transport = &http.Transport{
+			MaxIdleConnsPerHost: MaxIdleConnections,
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+		}
 	}
 	return &snaptelClient{
 		client: client,
@@ -61,7 +82,7 @@ func (s snaptelClient) GetTaskMetrics() ([]TaskData, error) {
 	}
 	req.SetBasicAuth("snap", s.apiKey)
 	response, err := s.client.Do(req)
-	if err != nil {
+	if err != nil && responce == nil {
 		return nil, err
 	}
 	defer response.Body.Close()
